@@ -5,5 +5,6 @@ idf_component_register(SRCS "main.c"
                             defines
                         PRIV_REQUIRES
                             spi_flash
+                            nvs_flash
                             log
                         INCLUDE_DIRS "")

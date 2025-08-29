@@ -3,6 +3,8 @@
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "nvs.h"
+#include "nvs_flash.h"
 #include "esp_log.h"
 
 #include "driver_chipinfo.h"
@@ -11,6 +13,15 @@
 
 void app_main(void)
 {
+    // Initialize NVS
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK( ret );
+
+    // Mainapp Code Starts
     ESP_LOGI(DEBUG_TAG_MAINAPP, "");
     ESP_LOGI(DEBUG_TAG_MAINAPP, "");
     ESP_LOGI(DEBUG_TAG_MAINAPP, "Init");
@@ -20,17 +31,17 @@ void app_main(void)
 
     // Print Chip Information
     esp_chip_info_t c_info;
-    uint8_t c_mac[50] = {0};
+    uint8_t buffer[50] = {0};
     uint32_t size_flash;
     uint32_t size_ram;
 
     DRIVER_CHIPINFO_GetChipInfo(&c_info);
-    DRIVER_CHIPINFO_GetChipID(c_mac);
+    DRIVER_CHIPINFO_GetChipID(buffer);
     size_flash = DRIVER_CHIPINFO_GetFlashSizeBytes();
     size_ram = DRIVER_CHIPINFO_GetRamSizeBytes();
 
-    ESP_LOGI(DEBUG_TAG_MAINAPP, "**************************");
-    ESP_LOGI(DEBUG_TAG_MAINAPP, "MAC "MACSTR, MAC2STR(c_mac));
+    ESP_LOGI(DEBUG_TAG_MAINAPP, "****************************************");
+    ESP_LOGI(DEBUG_TAG_MAINAPP, "MAC : "MACSTR, MAC2STR(buffer));
     ESP_LOGI(DEBUG_TAG_MAINAPP, "CHIP INFO: %s %s %s %s",
         CONFIG_IDF_TARGET,
         (c_info.features & CHIP_FEATURE_WIFI_BGN) ? "WIFI" : "",
@@ -38,5 +49,25 @@ void app_main(void)
         (c_info.features & CHIP_FEATURE_BT) ? "BT" : ""
     );
     ESP_LOGI(DEBUG_TAG_MAINAPP, "FLASH : %u MB", size_flash/(1024 * 1024));
-    ESP_LOGI(DEBUG_TAG_MAINAPP, "**************************");
+    
+    ESP_LOGI(DEBUG_TAG_MAINAPP, "");
+
+    memset(buffer, 0, 50);
+    DRIVER_APPINFO_GetProjectName((char*)buffer);
+    ESP_LOGI(DEBUG_TAG_MAINAPP, "PROJECT NAME : %s", (char*)buffer);
+    memset(buffer, 0, 50);
+    DRIVER_APPINFO_GetCompileDateTime((char*)buffer);
+    ESP_LOGI(DEBUG_TAG_MAINAPP, "COMPILE DATETIME : %s", (char*)buffer);
+    memset(buffer, 0, 50);
+    DRIVER_APPINFO_GetIDFVersion((char*)buffer);
+    ESP_LOGI(DEBUG_TAG_MAINAPP, "IDF VERSION : %s", (char*)buffer);
+    memset(buffer, 0, 50);
+    DRIVER_APPINFO_GetGitDetails((char*)buffer);
+    ESP_LOGI(DEBUG_TAG_MAINAPP, "GIT DETAILS : %s", (char*)buffer);
+    ESP_LOGI(DEBUG_TAG_MAINAPP, "****************************************");
+
+    while(true)
+    {
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+    }
 }
