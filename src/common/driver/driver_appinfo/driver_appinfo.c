@@ -44,7 +44,7 @@ bool DRIVER_APPINFO_GetGitDetails(char* str)
 {
     // Return Git Details
 
-    sprintf(str, "Branch:%s Hash:%s Tag:%s", 
+    sprintf(str, "Branch : %s Hash : %s Tag : %s", 
         GIT_BRANCH,
         GIT_HASH,
         GIT_TAG);

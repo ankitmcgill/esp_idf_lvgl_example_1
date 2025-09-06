@@ -9,6 +9,7 @@
 
 #include "driver_chipinfo.h"
 #include "driver_appinfo.h"
+#include "driver_wifi.h"
 #include "debug.h"
 
 void app_main(void)
@@ -66,8 +67,15 @@ void app_main(void)
     ESP_LOGI(DEBUG_TAG_MAINAPP, "GIT DETAILS : %s", (char*)buffer);
     ESP_LOGI(DEBUG_TAG_MAINAPP, "****************************************");
 
+    // Intialize Drivers & Modules
+    DRIVER_WIFI_Init();
+
+    DRIVER_WIFI_Connect("Ankit_wifi", "casa@2021");
+
     while(true)
     {
-        vTaskDelay(500 / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(500));
     }
+
+    vTaskDelete(NULL);
 }
