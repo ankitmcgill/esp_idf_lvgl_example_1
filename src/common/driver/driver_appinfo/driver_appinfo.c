@@ -2,7 +2,7 @@
 // AUGUST 26, 2025
 
 #include "driver_appinfo.h"
-#include "debug.h"
+#include "tasks_tags.h"
 
 extern const esp_app_desc_t esp_app_desc;
 

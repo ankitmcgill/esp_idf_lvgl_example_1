@@ -14,7 +14,6 @@
 #define DRIVER_WIFI_LEN_SSID    (32)
 #define DRIVER_WIFI_LED_PWD     (64)
 
-
 bool DRIVER_WIFI_Init(void);
 
 bool DRIVER_WIFI_Connect(char* ssid, char* password);

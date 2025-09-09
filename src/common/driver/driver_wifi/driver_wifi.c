@@ -9,10 +9,9 @@
 #include "lwip/sys.h"
 
 #include "driver_wifi.h"
-#include "debug.h"
+#include "tasks_tags.h"
 
 // Local Variables
-
 
 // Local Functions
 static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
