@@ -2,9 +2,11 @@
 // AUGUST 26, 2025
 
 #include "driver_chipinfo.h"
+#include "common_data_types.h"
 #include "tasks_tags.h"
 
 // Local Variables
+static component_type_t s_component_type;
 
 // Local Functions
 
@@ -13,7 +15,9 @@ bool DRIVER_CHIPINFO_Init(void)
 {
     //Initialize DRIVER_CHIPINFO
 
-    ESP_LOGI(DEBUG_TAG_DRIVER_CHIPINFO, "Init");
+    s_component_type = COMPONENT_TYPE_NON_TASK;
+
+    ESP_LOGI(DEBUG_TAG_DRIVER_CHIPINFO, "Type %u. Init", s_component_type);
 
     return true;
 }

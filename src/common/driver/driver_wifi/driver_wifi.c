@@ -9,9 +9,11 @@
 #include "lwip/sys.h"
 
 #include "driver_wifi.h"
+#include "common_data_types.h"
 #include "tasks_tags.h"
 
 // Local Variables
+static component_type_t s_component_type;
 
 // Local Functions
 static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
@@ -57,6 +59,8 @@ bool DRIVER_WIFI_Init(void)
     esp_event_handler_instance_t event_handler_got_ip;
     esp_event_handler_instance_t event_handler_any_event;
 
+    s_component_type = COMPONENT_TYPE_TASK;
+
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     esp_netif_create_default_wifi_sta();
@@ -78,7 +82,7 @@ bool DRIVER_WIFI_Init(void)
         &event_handler_got_ip
     ));
 
-    ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Init");
+    ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Type %u. Init", s_component_type);
 
     return true;
 }

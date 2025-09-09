@@ -2,11 +2,14 @@
 // AUGUST 26, 2025
 
 #include "driver_appinfo.h"
+#include "common_data_types.h"
 #include "tasks_tags.h"
 
+// Extern Variables
 extern const esp_app_desc_t esp_app_desc;
 
 // Local Variables
+static component_type_t s_component_type;
 
 // Local Functions
 
@@ -15,7 +18,9 @@ bool DRIVER_APPINFO_Init(void)
 {
     //Initialize DRIVER_CHIPINFO
 
-    ESP_LOGI(DEBUG_TAG_DRIVER_APPINFO, "Init");
+    s_component_type = COMPONENT_TYPE_NON_TASK;
+
+    ESP_LOGI(DEBUG_TAG_DRIVER_APPINFO, "Type %u. Init", s_component_type);
 
     return true;
 }
