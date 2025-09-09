@@ -10,45 +10,19 @@
 
 #include "driver_wifi.h"
 #include "common_data_types.h"
+#include "globals.h"
 #include "tasks_tags.h"
 
+// Extern Variables
+EventGroupHandle_t handle_event_group_driver_wifi;
+
 // Local Variables
+static driver_wifi_state_t s_state;
 static component_type_t s_component_type;
 
 // Local Functions
-static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
-{
-    if(event_base == WIFI_EVENT)
-    {
-        if(event_id == WIFI_EVENT_STA_START)
-        {
-            // Wifi Station Started. Connect To Wifi
-
-            ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Station Started. Connecting...");
-            esp_wifi_connect();
-        }
-        else if(event_id == WIFI_EVENT_STA_DISCONNECTED)
-        {
-            ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Station Disconnected. Retrying...");
-        }
-
-        return;
-    }
-
-    if(event_base == IP_EVENT)
-    {
-        if(event_id == IP_EVENT_STA_GOT_IP)
-        {
-            ip_event_got_ip_t* event = (ip_event_got_ip_t*)event_data;
-
-            ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Got IP : " IPSTR, IP2STR(&(event->ip_info.ip)));
-        }
-        else if(event_id == IP_EVENT_STA_LOST_IP)
-        {
-            ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Lost IP");
-        }
-    }
-}
+static void s_driver_wifi_set_state(driver_wifi_state_t state);
+static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
 
 // External Functions
 bool DRIVER_WIFI_Init(void)
@@ -60,6 +34,7 @@ bool DRIVER_WIFI_Init(void)
     esp_event_handler_instance_t event_handler_any_event;
 
     s_component_type = COMPONENT_TYPE_TASK;
+    s_state = -1;
 
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -81,6 +56,10 @@ bool DRIVER_WIFI_Init(void)
         NULL,
         &event_handler_got_ip
     ));
+
+    // Create Event Group
+    handle_event_group_driver_wifi = xEventGroupCreate();
+    s_driver_wifi_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
 
     ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Type %u. Init", s_component_type);
 
@@ -104,6 +83,77 @@ bool DRIVER_WIFI_Connect(char* ssid, char* password)
 
     ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Connect");
 
-return true;
+    return true;
 }
 
+bool DRIVER_WIFI_Disconnect(void)
+{
+    // Disconnect Wifi
+
+    esp_wifi_disconnect();
+
+    ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Disconnect");
+
+    return true;
+}
+
+static void s_driver_wifi_set_state(driver_wifi_state_t state)
+{
+    // Driver Wifi Set State
+    
+    driver_wifi_state_t old_state = s_state;
+    xEventGroupClearBits(
+        handle_event_group_driver_wifi,
+        0xFFFFFFFF
+    );
+    xEventGroupSetBits(
+        handle_event_group_driver_wifi,
+        (1 << state)
+    );
+    s_state = state;
+
+    ESP_LOGD(DEBUG_TAG_DRIVER_WIFI, "%u -> %u", old_state, s_state);
+}
+
+static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
+{
+    // Wifi Event Handler
+
+    if(event_base == WIFI_EVENT)
+    {
+        if(event_id == WIFI_EVENT_STA_START)
+        {
+            // Wifi Station Started. Connect To Wifi
+            ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Station Started. Connecting...");
+
+            esp_wifi_connect();
+        }
+        else if(event_id == WIFI_EVENT_STA_DISCONNECTED)
+        {
+            s_driver_wifi_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
+
+            ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Station Disconnected");
+        }
+
+        return;
+    }
+
+    if(event_base == IP_EVENT)
+    {
+        if(event_id == IP_EVENT_STA_GOT_IP)
+        {
+            ip_event_got_ip_t* event = (ip_event_got_ip_t*)event_data;
+            s_driver_wifi_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
+            
+            ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Got IP : " IPSTR, IP2STR(&(event->ip_info.ip)));
+        }
+        else if(event_id == IP_EVENT_STA_LOST_IP)
+        {
+            // Lost IP. Disconnect
+
+            ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Lost IP");
+            
+            DRIVER_WIFI_Disconnect();
+        }
+    }
+}

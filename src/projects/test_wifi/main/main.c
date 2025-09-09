@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include "sdkconfig.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "esp_log.h"
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 #include "driver_chipinfo.h"
 #include "driver_appinfo.h"
 #include "driver_wifi.h"
 #include "module_wifi.h"
 #include "tasks_tags.h"
-#include "debug.h"
+#include "project_defines.h"
 
 void app_main(void)
 {
@@ -22,7 +23,7 @@ void app_main(void)
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
-    ESP_ERROR_CHECK( ret );
+    ESP_ERROR_CHECK(ret);
 
     // Initialize Chip & App Info
     DRIVER_CHIPINFO_Init();
@@ -75,7 +76,8 @@ void app_main(void)
     DRIVER_WIFI_Init();
     MODULE_WIFI_Init();
 
-    DRIVER_WIFI_Connect("Ankit_wifi", "casa@2021");
+    // Start Scheduler
+    vTaskStartScheduler();
 
     while(true)
     {

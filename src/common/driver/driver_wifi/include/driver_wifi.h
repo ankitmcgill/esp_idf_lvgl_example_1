@@ -14,6 +14,11 @@
 #define DRIVER_WIFI_LEN_SSID    (32)
 #define DRIVER_WIFI_LED_PWD     (64)
 
+typedef enum{
+    DRIVER_WIFI_STATE_DISCONNECTED = 0,
+    DRIVER_WIFI_STATE_CONNECTED,
+}driver_wifi_state_t;
+
 bool DRIVER_WIFI_Init(void);
 
 bool DRIVER_WIFI_Connect(char* ssid, char* password);

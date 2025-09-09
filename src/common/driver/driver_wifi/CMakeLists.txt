@@ -5,4 +5,5 @@ idf_component_register(SRCS "driver_wifi.c"
                        REQUIRES
                             esp_wifi
                             nvs_flash
+                            freertos
 )

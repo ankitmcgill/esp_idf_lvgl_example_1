@@ -10,4 +10,5 @@ idf_component_register(SRCS "main.c"
                             spi_flash
                             nvs_flash
                             log
+                            freertos
                         INCLUDE_DIRS "")
