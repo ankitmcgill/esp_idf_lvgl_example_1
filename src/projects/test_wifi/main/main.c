@@ -77,8 +77,8 @@ void app_main(void)
     MODULE_WIFI_Init();
 
     // Start Scheduler
-    vTaskStartScheduler();
-
+    // No Need. ESP-IDF Automatically Starts The Scheduler Before main Is Called
+    
     while(true)
     {
         vTaskDelay(pdMS_TO_TICKS(500));

@@ -14,14 +14,14 @@
 #include "tasks_tags.h"
 
 // Extern Variables
-EventGroupHandle_t handle_event_group_driver_wifi;
+EventGroupHandle_t handle_event_group_driver_wifi = NULL;
 
 // Local Variables
 static driver_wifi_state_t s_state;
 static component_type_t s_component_type;
 
 // Local Functions
-static void s_driver_wifi_set_state(driver_wifi_state_t state);
+static void s_driver_wifi_set_state(driver_wifi_state_t newstate);
 static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
 
 // External Functions
@@ -97,20 +97,20 @@ bool DRIVER_WIFI_Disconnect(void)
     return true;
 }
 
-static void s_driver_wifi_set_state(driver_wifi_state_t state)
+static void s_driver_wifi_set_state(driver_wifi_state_t newstate)
 {
     // Driver Wifi Set State
     
     driver_wifi_state_t old_state = s_state;
+    s_state = newstate;
     xEventGroupClearBits(
         handle_event_group_driver_wifi,
-        0xFFFFFFFF
+        0x00FFFFFF
     );
     xEventGroupSetBits(
         handle_event_group_driver_wifi,
-        (1 << state)
+        (1 << s_state)
     );
-    s_state = state;
 
     ESP_LOGD(DEBUG_TAG_DRIVER_WIFI, "%u -> %u", old_state, s_state);
 }

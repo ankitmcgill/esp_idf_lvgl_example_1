@@ -19,7 +19,7 @@ static component_type_t s_component_type;
 static TaskHandle_t s_task_handle;
 
 // Local Functions
-static void s_module_wifi_set_state(module_wifi_state_t state);
+static void s_module_wifi_set_state(module_wifi_state_t newstate);
 static void s_task_function(void *pvParameters);
 
 // External Functions
@@ -29,7 +29,10 @@ bool MODULE_WIFI_Init(void)
 
     s_component_type = COMPONENT_TYPE_TASK;
     s_state = -1;
-    s_module_wifi_set_state(MODULE_WIFI_STATE_IDLE);
+
+    // Create Event Group
+    handle_event_group_module_wifi = xEventGroupCreate();
+    s_module_wifi_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
 
     // Create Task
     xTaskCreate(
@@ -46,20 +49,21 @@ bool MODULE_WIFI_Init(void)
     return true;
 }
 
-static void s_module_wifi_set_state(module_wifi_state_t state)
+static void s_module_wifi_set_state(module_wifi_state_t newstate)
 {
     // Module Wifi Set State
     
     module_wifi_state_t old_state = s_state;
+    s_state = newstate;
     xEventGroupClearBits(
         handle_event_group_module_wifi,
-        0xFFFFFFFF
+        0x00FFFFFF
     );
     xEventGroupSetBits(
         handle_event_group_module_wifi,
-        (1 << state)
+        (1 << s_state)
     );
-    s_state = state;
+    s_state = newstate;
 
     ESP_LOGD(DEBUG_TAG_MODULE_WIFI, "%u -> %u", old_state, s_state);
 }
@@ -69,7 +73,9 @@ static void s_task_function(void *pvParameters)
     // Task Function
 
     while(true){
+        vTaskDelay(pdMS_TO_TICKS(500));
 
+        ESP_LOGE("uuuuu", "hello");
     };
 
     vTaskDelete(NULL);

@@ -1,6 +1,9 @@
 // DRIVER_APPINFO
 // AUGUST 26, 2025
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #include "driver_appinfo.h"
 #include "common_data_types.h"
 #include "tasks_tags.h"
@@ -49,7 +52,7 @@ bool DRIVER_APPINFO_GetGitDetails(char* str)
 {
     // Return Git Details
 
-    sprintf(str, "Branch : %s Hash : %s Tag : %s", 
+    sprintf(str, "Branch : %s | Hash : %s | Tag : %s", 
         GIT_BRANCH,
         GIT_HASH,
         GIT_TAG);

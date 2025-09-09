@@ -11,7 +11,7 @@
 #define TASK_PRIORITY_MODULE_WIFI       (2)
 
 // Task Stack Depth
-#define TASK_STACK_DEPTH_MODULE_WIFI    (64)
+#define TASK_STACK_DEPTH_MODULE_WIFI    (2048)
 
 // Task Debug Tag
 #define DEBUG_TAG_DRIVER_CHIPINFO       ("D.ChipInfo")
