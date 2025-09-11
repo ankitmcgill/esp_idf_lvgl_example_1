@@ -18,11 +18,12 @@ EventGroupHandle_t handle_event_group_driver_wifi = NULL;
 
 // Local Variables
 static driver_wifi_state_t s_state;
+static driver_wifi_state_t s_state_prev;
 static component_type_t s_component_type;
 
 // Local Functions
-static void s_driver_wifi_set_state(driver_wifi_state_t newstate);
-static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
+static void s_set_state(driver_wifi_state_t newstate);
+static void s_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
 
 // External Functions
 bool DRIVER_WIFI_Init(void)
@@ -35,6 +36,7 @@ bool DRIVER_WIFI_Init(void)
 
     s_component_type = COMPONENT_TYPE_TASK;
     s_state = -1;
+    s_state_prev = -1;
 
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -45,21 +47,21 @@ bool DRIVER_WIFI_Init(void)
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
         WIFI_EVENT,
         ESP_EVENT_ANY_ID,
-        &s_driver_wifi_event_handler,
+        &s_wifi_event_handler,
         NULL,
         &event_handler_any_event
     ));
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
         IP_EVENT,
         IP_EVENT_STA_GOT_IP,
-        &s_driver_wifi_event_handler,
+        &s_wifi_event_handler,
         NULL,
         &event_handler_got_ip
     ));
 
     // Create Event Group
     handle_event_group_driver_wifi = xEventGroupCreate();
-    s_driver_wifi_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
+    s_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
 
     ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Type %u. Init", s_component_type);
 
@@ -97,11 +99,15 @@ bool DRIVER_WIFI_Disconnect(void)
     return true;
 }
 
-static void s_driver_wifi_set_state(driver_wifi_state_t newstate)
+static void s_set_state(driver_wifi_state_t newstate)
 {
     // Driver Wifi Set State
     
-    driver_wifi_state_t old_state = s_state;
+    if(s_state == newstate){
+        return;
+    }
+    
+    s_state_prev = s_state;
     s_state = newstate;
     xEventGroupClearBits(
         handle_event_group_driver_wifi,
@@ -109,13 +115,13 @@ static void s_driver_wifi_set_state(driver_wifi_state_t newstate)
     );
     xEventGroupSetBits(
         handle_event_group_driver_wifi,
-        (1 << s_state)
+        BIT_VALUE(s_state)
     );
 
-    ESP_LOGD(DEBUG_TAG_DRIVER_WIFI, "%u -> %u", old_state, s_state);
+    ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "%u -> %u", s_state_prev, s_state);
 }
 
-static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
+static void s_wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
 {
     // Wifi Event Handler
 
@@ -130,7 +136,7 @@ static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, 
         }
         else if(event_id == WIFI_EVENT_STA_DISCONNECTED)
         {
-            s_driver_wifi_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
+            s_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
 
             ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Station Disconnected");
         }
@@ -143,7 +149,7 @@ static void s_driver_wifi_event_handler(void* arg, esp_event_base_t event_base, 
         if(event_id == IP_EVENT_STA_GOT_IP)
         {
             ip_event_got_ip_t* event = (ip_event_got_ip_t*)event_data;
-            s_driver_wifi_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
+            s_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
             
             ESP_LOGI(DEBUG_TAG_DRIVER_WIFI, "Got IP : " IPSTR, IP2STR(&(event->ip_info.ip)));
         }
