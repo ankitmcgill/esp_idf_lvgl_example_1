@@ -1,0 +1,19 @@
+' DRIVER WIFI
+' 9/19/25
+
+@startuml
+participant "DRIVER_WIFE_STATE\nIDLE" as DW_IDLE
+participant "DRIVER_WIFE_STATE\nDISCONNECTED" as DW_DISCONNECTED
+participant "DRIVER_WIFE_STATE\nCONNECTED" as DW_CONNECTED
+
+box "ESP" #LightGreen
+participant "IP_EVENT" as ESP_IPEVENT
+participant "WIFI_EVENT" as ESP_WIFIEVENT
+end box
+
+
+DW_IDLE -> DW_DISCONNECTED: Initial set state to DISCONNECTED
+WS -> DB: Query for data
+DB --> WS: Return data
+WS --> User: Send data response
+@enduml

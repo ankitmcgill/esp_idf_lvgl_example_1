@@ -3,10 +3,11 @@
 
 #!/bin/bash
 
-RED="\e[31m"
-GREEN="\e[32m"
-ENDCOLOR="\e[0m"
+# Get The Path Where This Shell Script Is
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
-echo -e "${GREEN}*** Build Clean${ENDCOLOR}"
+# Source Color Definitions
+source $SCRIPT_DIR/colors.sh
+
+printf "${LIGHT_YELLOW}*** Build Clean ***${ENDCOLOR}\n"
 idf.py clean
-
