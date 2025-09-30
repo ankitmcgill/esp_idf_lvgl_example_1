@@ -2,18 +2,38 @@
 ' 9/19/25
 
 @startuml
-participant "DRIVER_WIFE_STATE\nIDLE" as DW_IDLE
-participant "DRIVER_WIFE_STATE\nDISCONNECTED" as DW_DISCONNECTED
-participant "DRIVER_WIFE_STATE\nCONNECTED" as DW_CONNECTED
 
-box "ESP" #LightGreen
-participant "IP_EVENT" as ESP_IPEVENT
-participant "WIFI_EVENT" as ESP_WIFIEVENT
+title DRIVER_WIFI
+
+skinparam dpi 400
+
+actor "MODULE_WIFI" as MW
+participant "DRIVER_WIFI\nSTATE\nIDLE" as DW_IDLE
+participant "DRIVER_WIFI\nSTATE\nDISCONNECTED" as DW_DISCONNECTED
+participant "DRIVER_WIFI\nSTATE\nCONNECTED" as DW_CONNECTED
+
+box "ESP32" #LightGreen
+participant "IP_EVENT\n\n" as ESP_IPEVENT
+participant "WIFI_EVENT\n\n" as ESP_WIFIEVENT
 end box
 
 
 DW_IDLE -> DW_DISCONNECTED: Initial set state to DISCONNECTED
-WS -> DB: Query for data
-DB --> WS: Return data
-WS --> User: Send data response
+
+MW -> DW_DISCONNECTED : <color #FF00FF>DRIVER_WIFI_Connect()</color>
+activate DW_DISCONNECTED #Magenta
+DW_DISCONNECTED -> DW_DISCONNECTED : <color #0000FF>esp_wifi_start()</color>
+return
+
+ESP_WIFIEVENT -> DW_DISCONNECTED : WIFI_EVENT_STA_DISCONNECTED
+ESP_WIFIEVENT -> ESP_WIFIEVENT : WIFI_EVENT_STA_START\n<color #0000FF>esp_wifi_connect()</color>
+
+ESP_IPEVENT -> DW_CONNECTED : IP_EVENT_STA_GOT_IP
+ESP_IPEVENT -> ESP_IPEVENT : IP_EVENT_STA_LOST_IP\n<color #0000FF>DRIVER_WIFI_Disconnect()</color>
+
+MW -> DW_CONNECTED : <color #FF00FF>DRIVER_WIFI_Disconnect()</color>
+activate DW_CONNECTED #Magenta
+DW_CONNECTED -> DW_CONNECTED : <color #0000FF>esp_wifi_disconnect()</color>
+return
+
 @enduml
