@@ -7,7 +7,7 @@
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 # Source Color Definitions
-source ./colors.sh
+source $SCRIPT_DIR/colors.sh
 
-printf "${GREEN}*** Flash ***${ENDCOLOR}\n"
+printf "${LIGHT_YELLOW}*** Flash ***${ENDCOLOR}\n"
 idf.py flash

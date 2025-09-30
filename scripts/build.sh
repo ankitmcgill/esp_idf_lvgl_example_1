@@ -7,7 +7,7 @@
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 # Source Color Definitions
-source ./colors.sh
+source $SCRIPT_DIR/colors.sh
 
-printf "${GREEN}*** Build ***${ENDCOLOR}\n"
+printf "${LIGHT_YELLOW}*** Build ***${ENDCOLOR}\n"
 idf.py build
