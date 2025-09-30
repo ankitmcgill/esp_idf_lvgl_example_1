@@ -5,19 +5,20 @@
 #include "freertos/task.h"
 
 #include "module_wifi.h"
-#include "common_data_types.h"
-#include "globals.h"
-#include "tasks_tags.h"
+#include "define_common_data_types.h"
+#include "define_rtos_globals.h"
+#include "define_rtos_tasks.h"
 #include "project_defines.h"
 
 // Extern Variables
-EventGroupHandle_t handle_event_group_module_wifi;
+QueueHandle_t handle_queue_module_wifi;
 
 // Local Variables
 static module_wifi_state_t s_state;
 static module_wifi_state_t s_state_prev;
-static component_type_t s_component_type;
+static rtos_component_type_t s_component_type;
 static TaskHandle_t s_task_handle;
+static notification_type_t s_notification;
 
 // Local Functions
 static void s_set_state(module_wifi_state_t newstate);
@@ -31,9 +32,13 @@ bool MODULE_WIFI_Init(void)
     s_component_type = COMPONENT_TYPE_TASK;
     s_state = -1;
     s_state_prev = -1;
+    s_set_state(MODULE_WIFI_STATE_IDLE);
 
-    // Create Event Group
-    handle_event_group_module_wifi = xEventGroupCreate();
+    // Create Queue
+    handle_queue_module_wifi = xQueueCreate(
+        QUEUE_MODULE_WIFI_DEPTH,
+        sizeof(notification_type_t)
+    );
 
     // Create Task
     xTaskCreate(
@@ -43,6 +48,12 @@ bool MODULE_WIFI_Init(void)
         NULL,
         TASK_PRIORITY_MODULE_WIFI,
         &s_task_handle
+    );
+
+    // Register Change Notification - Driver Wifi
+    DRIVER_WIFI_RegisterChangeNotification(
+        handle_queue_module_wifi,
+        (1 << NOTIFICATION_TYPE_DRIVER_WIFI)
     );
 
     ESP_LOGI(DEBUG_TAG_MODULE_WIFI, "Type %u. Init", s_component_type);
@@ -60,14 +71,6 @@ static void s_set_state(module_wifi_state_t newstate)
 
     s_state_prev = s_state;
     s_state = newstate;
-    xEventGroupClearBits(
-        handle_event_group_module_wifi,
-        0x00FFFFFF
-    );
-    xEventGroupSetBits(
-        handle_event_group_module_wifi,
-        BIT_VALUE(s_state)
-    );
 
     ESP_LOGI(DEBUG_TAG_MODULE_WIFI, "%u -> %u", s_state_prev, s_state);
 }
@@ -76,7 +79,16 @@ static void s_task_function(void *pvParameters)
 {
     // Task Function
 
-    uint32_t event_value;
+    xQueueReceive(
+        handle_queue_module_wifi,
+        (void*)&s_notification,
+        portMAX_DELAY
+    );
+
+    if(s_notification.mask == (1 << MODULE_WIFI_CHANGE_SOURCE_TYPE_DRIVER_WIFI))
+    {
+        // Driver Wifi Notification
+    }
 
     while(true){
         switch(s_state)
@@ -128,29 +140,6 @@ static void s_task_function(void *pvParameters)
 
             default:
                 break;
-        }
-
-        event_value = xEventGroupWaitBits(
-            handle_event_group_driver_wifi,
-            BIT_VALUE(DRIVER_WIFI_STATE_CONNECTED)|
-            BIT_VALUE(DRIVER_WIFI_STATE_DISCONNECTED),
-            pdFALSE,
-            pdFALSE,
-            portMAX_DELAY
-        );
-
-        if(event_value & BIT_VALUE(DRIVER_WIFI_STATE_CONNECTED))
-        {
-            // Wifi Connected
-            
-            s_set_state(DRIVER_WIFI_STATE_CONNECTED);
-        }
-
-        if(event_value & BIT_VALUE(DRIVER_WIFI_STATE_DISCONNECTED))
-        {
-            // Wifi Disconnected
-
-            s_set_state(DRIVER_WIFI_STATE_DISCONNECTED);
         }
 
         vTaskDelay(pdMS_TO_TICKS(500));

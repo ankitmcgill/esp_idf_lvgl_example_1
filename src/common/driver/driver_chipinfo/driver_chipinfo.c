@@ -2,11 +2,11 @@
 // AUGUST 26, 2025
 
 #include "driver_chipinfo.h"
-#include "common_data_types.h"
-#include "tasks_tags.h"
+#include "define_common_data_types.h"
+#include "define_rtos_tasks.h"
 
 // Local Variables
-static component_type_t s_component_type;
+static rtos_component_type_t s_component_type;
 
 // Local Functions
 

@@ -1,3 +1,5 @@
 {
     "git.openRepositoryInParentFolders": "never",
+    "workbench.tree.indent": 16,
+    "editor.experimental.treeSitterTelemetry": true,
 }

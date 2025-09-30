@@ -1,8 +1,8 @@
-// DEFINES - TASKS TAGS
+// DEFINE RTOS TASKS
 // SEPTEMBER 9, 2025
 
-#ifndef _DEFINES_TASKS_TAGS_
-#define _DEFINES_TASKS_TAGS_
+#ifndef _DEFINE_RTOS_TASKS_
+#define _DEFINE_RTOS_TASKS_
 
 #include "esp_log.h"
 

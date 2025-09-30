@@ -12,7 +12,8 @@
 #include "driver_appinfo.h"
 #include "driver_wifi.h"
 #include "module_wifi.h"
-#include "tasks_tags.h"
+#include "define_rtos_tasks.h"
+#include "define_rtos_globals.h"
 #include "project_defines.h"
 
 void app_main(void)

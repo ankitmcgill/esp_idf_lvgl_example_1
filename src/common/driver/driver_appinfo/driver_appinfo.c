@@ -5,14 +5,14 @@
 #include "freertos/task.h"
 
 #include "driver_appinfo.h"
-#include "common_data_types.h"
-#include "tasks_tags.h"
+#include "define_common_data_types.h"
+#include "define_rtos_tasks.h"
 
 // Extern Variables
 extern const esp_app_desc_t esp_app_desc;
 
 // Local Variables
-static component_type_t s_component_type;
+static rtos_component_type_t s_component_type;
 
 // Local Functions
 
