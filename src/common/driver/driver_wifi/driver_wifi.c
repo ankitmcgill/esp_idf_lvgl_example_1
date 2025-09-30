@@ -85,7 +85,7 @@ bool DRIVER_WIFI_Connect(char* ssid, char* password)
     wifi_config_t w_config;
 
     if(s_state == DRIVER_WIFI_STATE_CONNECTED){
-        return;
+        return true;
     }
 
     strcpy((char*)w_config.sta.ssid, ssid);
@@ -107,7 +107,7 @@ bool DRIVER_WIFI_Disconnect(void)
     // Disconnect Wifi
 
     if(s_state == DRIVER_WIFI_STATE_DISCONNECTED){
-        return;
+        return true;
     }
 
     esp_wifi_disconnect();

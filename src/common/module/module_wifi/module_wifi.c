@@ -85,10 +85,10 @@ static void s_task_function(void *pvParameters)
         portMAX_DELAY
     );
 
-    if(s_notification.mask == (1 << MODULE_WIFI_CHANGE_SOURCE_TYPE_DRIVER_WIFI))
-    {
-        // Driver Wifi Notification
-    }
+    // if(s_notification.mask == (1 << MODULE_WIFI_CHANGE_SOURCE_TYPE_DRIVER_WIFI))
+    // {
+    //     // Driver Wifi Notification
+    // }
 
     while(true){
         switch(s_state)
