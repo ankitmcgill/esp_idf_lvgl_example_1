@@ -1,0 +1,14 @@
+// BSP LCD
+// SEPTEMBER 30, 2025
+
+#ifndef _BSP_LCD_
+#define _BSP_LCD_
+
+// LCD DRIVER : ST7262
+// SIZE : 4.3 INCH
+// RESOLUTION :  800 x 400
+// COLOR FORMAT : RGB 565
+// ESP32 PSRAM AVAILABLE : 4MB
+
+
+#endif
