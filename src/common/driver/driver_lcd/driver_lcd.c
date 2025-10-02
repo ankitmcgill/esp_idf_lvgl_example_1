@@ -40,7 +40,7 @@ bool DRIVER_LCD_Init(void)
     s_lvgl_port_init();
     s_lvgl_config();
 
-    if (lvgl_port_lock(-1)) {
+    if (lvgl_port_lock(portMAX_DELAY)) {
         s_lvgl_test_display();
         lvgl_port_unlock();
     }
