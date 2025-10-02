@@ -18,6 +18,8 @@ idf_component_register(
         ${srcs}
     INCLUDE_DIRS 
         ${include_dirs}
+    REQUIRES
+        lvgl__lvgl
 )
 
 idf_component_get_property(lvgl_lib lvgl__lvgl COMPONENT_LIB)

@@ -37,6 +37,9 @@ set(EXTRA_COMPONENT_DIRS
     # Others
     "../../common/others/"
 
+    # Project UI
+    "./project_ui/"
+
     # Project Defines
     "./project_defines/"
     

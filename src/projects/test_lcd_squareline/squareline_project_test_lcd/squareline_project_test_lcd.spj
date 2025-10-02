@@ -525,7 +525,7 @@
   "selected_theme": "Default",
   "info": {
     "name": "eso_wifi_demo_1.spj",
-    "depth": 0,
+    "depth": 1,
     "width": 800,
     "height": 480,
     "rotation": 0,
@@ -547,10 +547,10 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "uiExportFolderPath": "/Volumes/external_hdd/dev/esp_idf_lvgl_example_1/src/projects/test_lcd squareline/squareline_project_test_lcd/export/ui",
-    "projectExportFolderPath": "/Volumes/external_hdd/dev/esp_idf_lvgl_example_1/src/projects/test_lcd squareline/squareline_project_test_lcd/export/project",
+    "uiExportFolderPath": "/Volumes/external_hdd/dev/esp_idf_lvgl_example_1/src/projects/test_lcd_squareline/squareline_project_test_lcd/export/ui",
+    "projectExportFolderPath": "/Volumes/external_hdd/dev/esp_idf_lvgl_example_1/src/projects/test_lcd_squareline/squareline_project_test_lcd/export/project",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 11,
+    "backup_cnt": 14,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.2.2",
@@ -569,7 +569,7 @@
     "naming_force_lowercase": true,
     "naming_add_subcomponent": false,
     "nidcnt": 1000233,
-    "BitDepth": 32,
+    "BitDepth": 16,
     "Name": "eso_wifi_demo_1"
   }
 }

@@ -16,8 +16,8 @@ lv_obj_t *ui____initial_actions0;
 const lv_image_dsc_t *ui_imgset_frame_[59] = {&ui_img_logo_frame_00_png, &ui_img_logo_frame_01_png, &ui_img_logo_frame_02_png, &ui_img_logo_frame_03_png, &ui_img_logo_frame_04_png, &ui_img_logo_frame_05_png, &ui_img_logo_frame_06_png, &ui_img_logo_frame_07_png, &ui_img_logo_frame_08_png, &ui_img_logo_frame_09_png, &ui_img_logo_frame_10_png, &ui_img_logo_frame_11_png, &ui_img_logo_frame_12_png, &ui_img_logo_frame_13_png, &ui_img_logo_frame_14_png, &ui_img_logo_frame_15_png, &ui_img_logo_frame_16_png, &ui_img_logo_frame_17_png, &ui_img_logo_frame_18_png, &ui_img_logo_frame_19_png, &ui_img_logo_frame_20_png, &ui_img_logo_frame_21_png, &ui_img_logo_frame_22_png, &ui_img_logo_frame_23_png, &ui_img_logo_frame_24_png, &ui_img_logo_frame_25_png, &ui_img_logo_frame_26_png, &ui_img_logo_frame_27_png, &ui_img_logo_frame_28_png, &ui_img_logo_frame_29_png, &ui_img_logo_frame_30_png, &ui_img_logo_frame_31_png, &ui_img_logo_frame_32_png, &ui_img_logo_frame_33_png, &ui_img_logo_frame_34_png, &ui_img_logo_frame_35_png, &ui_img_logo_frame_36_png, &ui_img_logo_frame_37_png, &ui_img_logo_frame_38_png, &ui_img_logo_frame_39_png, &ui_img_logo_frame_40_png, &ui_img_logo_frame_41_png, &ui_img_logo_frame_42_png, &ui_img_logo_frame_43_png, &ui_img_logo_frame_44_png, &ui_img_logo_frame_45_png, &ui_img_logo_frame_46_png, &ui_img_logo_frame_47_png, &ui_img_logo_frame_48_png, &ui_img_logo_frame_49_png, &ui_img_logo_frame_50_png, &ui_img_logo_frame_51_png, &ui_img_logo_frame_52_png, &ui_img_logo_frame_53_png, &ui_img_logo_frame_54_png, &ui_img_logo_frame_55_png, &ui_img_logo_frame_56_png, &ui_img_logo_frame_57_png, &ui_img_logo_frame_58_png};
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
-#if LV_COLOR_DEPTH != 32
-    #error "LV_COLOR_DEPTH should be 32bit to match SquareLine Studio's settings"
+#if LV_COLOR_DEPTH != 16
+    #error "LV_COLOR_DEPTH should be 16bit to match SquareLine Studio's settings"
 #endif
 
 ///////////////////// ANIMATIONS ////////////////////
