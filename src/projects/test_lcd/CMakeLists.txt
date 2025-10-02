@@ -39,6 +39,9 @@ set(EXTRA_COMPONENT_DIRS
 
     # Project Defines
     "./project_defines/"
+    
+    # Managed Components (Components Auto Downloaded From ESP-REGISTRY By idf_components.yml Dependency File)
+    "../../common/managed_components/"
 )
 
 # Project Version
@@ -46,4 +49,4 @@ set(PROJECT_VER "0.1")
 
 # "Trim" the build. Include the minimal set of components, main, and anything it depends on.
 idf_build_set_property(MINIMAL_BUILD ON)
-project(Test_Wifi)
+project(Test_Lcd)

@@ -1,6 +1,7 @@
 idf_component_register(SRCS
                         PRIV_REQUIRES
                         REQUIRES
-                            soc
+                            driver
                         INCLUDE_DIRS
+                            "include"
                         )

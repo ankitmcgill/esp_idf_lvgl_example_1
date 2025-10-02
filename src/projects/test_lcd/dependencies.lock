@@ -1,0 +1,17 @@
+dependencies:
+  idf:
+    source:
+      type: idf
+    version: 5.5.1
+  lvgl/lvgl:
+    dependencies: []
+    source:
+      path: /Volumes/external_hdd/dev/esp_idf_lvgl_example_1/src/common/managed_components/lvgl__lvgl
+      type: local
+    version: 9.3.0
+direct_dependencies:
+- idf
+- lvgl/lvgl
+manifest_hash: d21df37fedefea50d0ec3e0615cf6827489e78cbd7217af4fb227cd8e5b761bf
+target: esp32s3
+version: 2.0.0

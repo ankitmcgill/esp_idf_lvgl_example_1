@@ -3,6 +3,9 @@ idf_component_register(SRCS
                        INCLUDE_DIRS
                          "include"
                        PRIV_REQUIRES
+                            esp_lcd
+                            espressif__esp_lvgl_port
+                            esp_common
                             defines
                             bsp
                        REQUIRES
