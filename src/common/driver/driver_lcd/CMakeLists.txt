@@ -8,5 +8,6 @@ idf_component_register(SRCS
                             esp_common
                             defines
                             bsp
+                            project_ui
                        REQUIRES
 )

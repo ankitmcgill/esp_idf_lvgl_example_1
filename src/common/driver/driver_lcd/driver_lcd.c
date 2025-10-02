@@ -8,6 +8,7 @@
 #include "esp_check.h"
 
 #include "driver_lcd.h"
+#include "project_ui.h"
 #include "define_common_data_types.h"
 #include "define_rtos_globals.h"
 #include "define_rtos_tasks.h"
@@ -19,7 +20,6 @@
 static rtos_component_type_t s_component_type;
 static esp_lcd_panel_handle_t s_handle_panel;
 static lv_display_t* s_lv_display;
-
 
 // Local Functions
 static esp_err_t s_rgb_lcd_init(void);
@@ -41,7 +41,8 @@ bool DRIVER_LCD_Init(void)
     s_lvgl_config();
 
     if (lvgl_port_lock(portMAX_DELAY)) {
-        s_lvgl_test_display();
+        // s_lvgl_test_display();
+        PROJECT_UI_Init();
         lvgl_port_unlock();
     }
     
