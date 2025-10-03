@@ -6,5 +6,5 @@ BOARD : ESP32-S3-Touch-LCD-4.3 (NON TOUCH)
 
 MCU : ESP32-S3 WROOM
 FLASH : 16 MB
-PSRAM : 18MB
+PSRAM : 8MB
 -----------------------------------------------
