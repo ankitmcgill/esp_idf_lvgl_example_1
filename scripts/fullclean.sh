@@ -1,4 +1,4 @@
-# Clean Build
+# Full Clean Build
 # 8/27/25
 
 #!/bin/bash
