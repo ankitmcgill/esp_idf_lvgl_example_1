@@ -64,12 +64,12 @@ static esp_err_t s_rgb_lcd_init(void)
             .pclk_hz = DRIVER_LCD_PIXEL_CLK_HZ,
             .h_res = DRIVER_LCD_RESOLUTION_X,
             .v_res = DRIVER_LCD_RESOLUTION_Y,
-            .hsync_pulse_width = 4,
-            .hsync_back_porch = 8,
-            .hsync_front_porch = 8,
-            .vsync_pulse_width = 4,
-            .vsync_back_porch = 8,
-            .vsync_front_porch = 8,
+            .hsync_pulse_width = 40,
+            .hsync_back_porch = 40,
+            .hsync_front_porch = 48,
+            .vsync_pulse_width = 23,
+            .vsync_back_porch = 32,
+            .vsync_front_porch = 13,
             .flags.pclk_active_neg = true
         },
         .flags.fb_in_psram = true,
@@ -126,7 +126,7 @@ static esp_err_t s_lvgl_port_init(void)
         .timer_period_ms = 5
     };
 
-    ESP_RETURN_ON_ERROR(lvgl_port_init(&config_lvgl), DEBUG_TAG_DRIVER_LCD, "Lvgl Port Initi Fail");
+    ESP_RETURN_ON_ERROR(lvgl_port_init(&config_lvgl), DEBUG_TAG_DRIVER_LCD, "Lvgl Port Init Fail");
 
     return ESP_OK;
 }
@@ -161,7 +161,7 @@ static esp_err_t s_lvgl_config(void)
 
     lvgl_port_display_rgb_cfg_t lvgl_rgb_config = {
         .flags = {
-            .bb_mode = true,
+            .bb_mode = false,
             .avoid_tearing = true
         }
     };
@@ -169,7 +169,7 @@ static esp_err_t s_lvgl_config(void)
     s_lv_display = lvgl_port_add_disp_rgb(&lvgl_disp_config, &lvgl_rgb_config);
     
     if(!s_lv_display){
-        ESP_LOGE(DEBUG_TAG_DRIVER_LCD, "Lvgl Confil Failed");
+        ESP_LOGE(DEBUG_TAG_DRIVER_LCD, "Lvgl Config Failed");
     }
     
     return ESP_OK;

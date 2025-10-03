@@ -18,6 +18,7 @@
 #define DEBUG_TAG_DRIVER_APPINFO        ("D.AppInfo")
 #define DEBUG_TAG_DRIVER_WIFI           ("D.Wifi")
 #define DEBUG_TAG_DRIVER_LCD            ("D.Lcd")
+#define DEBUG_TAG_DRIVER_SPIFFS         ("D.Spiffs")
 #define DEBUG_TAG_MODULE_WIFI           ("M.Wifi")
 
 #endif
