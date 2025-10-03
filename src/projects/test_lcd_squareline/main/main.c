@@ -11,6 +11,7 @@
 #include "driver_chipinfo.h"
 #include "driver_appinfo.h"
 #include "driver_lcd.h"
+#include "driver_spiffs.h"
 #include "define_rtos_tasks.h"
 #include "define_rtos_globals.h"
 #include "project_defines.h"
@@ -30,9 +31,9 @@ void app_main(void)
     DRIVER_APPINFO_Init();
 
     esp_chip_info_t c_info;
-    uint8_t buffer[50] = {0};
     uint32_t size_flash;
     uint32_t size_ram;
+    uint8_t* buffer = (uint8_t*)malloc(256);
 
     DRIVER_CHIPINFO_GetChipInfo(&c_info);
     DRIVER_CHIPINFO_GetChipID(buffer);
@@ -73,7 +74,14 @@ void app_main(void)
     ESP_LOGI(DEBUG_TAG_MAIN, "");
 
     // Intialize Drivers & Modules
+    DRIVER_SPIFFS_Init();
     DRIVER_LCD_Init();
+
+    memset((void*)buffer, 0, 256);
+    DRIVER_SPIFFS_PrintInfo();
+    if(DRIVER_SPIFFS_ReadFile("/spiff/hw_info.txt", (char*)buffer)){
+        ESP_LOGI(DEBUG_TAG_MAIN, "%s", (char*)buffer);
+    }
 
     // Start Scheduler
     // No Need. ESP-IDF Automatically Starts The Scheduler Before main Is Called
